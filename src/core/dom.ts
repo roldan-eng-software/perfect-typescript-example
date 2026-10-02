@@ -29,13 +29,14 @@ export function qsa<T extends Element = Element>(
 /**
  * Props de `h()`. `readonly` + campos opcionais: sob `exactOptionalPropertyTypes`,
  * passar `{ text: undefined }` explicitamente é erro — omita a chave em vez de
- * encher o objeto de `undefined`.
+ * encher o objeto de `undefined`. `children` aceita `Node | string` porque é
+ * repassado a `Element.append`, que aceita os dois.
  */
 export interface ElementProps {
   readonly className?: string;
   readonly text?: string;
   readonly attrs?: Readonly<Record<string, string>>;
-  readonly children?: readonly Node[];
+  readonly children?: ReadonlyArray<Node | string>;
 }
 
 /**

@@ -1,0 +1,6 @@
+[
+  { "id": "p-01", "name": "TypeScript Strict Starter", "price": 49.9 },
+  { "id": "p-02", "name": "Result<T, E> Handbook", "price": 19.5 },
+  { "id": "p-03", "name": "Branded Types Kit", "price": 29.0 },
+  { "id": "p-04", "name": "Zero-Dependency Landing Page", "price": 0 }
+]

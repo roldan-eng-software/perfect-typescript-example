@@ -44,7 +44,49 @@ const demoEntries: readonly DemoEntry[] = [
     load: () => import('@/demos/01-inference-and-narrowing'),
   },
   { id: '02', title: 'Generics with constraints', load: () => import('@/demos/02-generics') },
-  // TODO(passo 4): adicionar 03–12 conforme cada demo for sendo criada.
+  { id: '03', title: 'Utility types in practice', load: () => import('@/demos/03-utility-types') },
+  {
+    id: '04',
+    title: 'Discriminated unions and exhaustiveness',
+    load: () => import('@/demos/04-discriminated-unions'),
+  },
+  {
+    id: '05',
+    title: 'Type guards and unknown',
+    load: () => import('@/demos/05-type-guards-and-unknown'),
+  },
+  {
+    id: '06',
+    title: 'Mapped, conditional and template types',
+    load: () => import('@/demos/06-mapped-conditional-template'),
+  },
+  // TODO(passo 4): adicionar 07–12 conforme cada demo for sendo criada.
+  {
+    id: '07',
+    title: 'Satisfies and as const',
+    load: () => import('@/demos/07-satisfies-and-const'),
+  },
+  { id: '08', title: 'Branded types', load: () => import('@/demos/08-branded-types') },
+  {
+    id: '09',
+    title: 'Result<T, E> and error handling',
+    load: () => import('@/demos/09-result-error-handling'),
+  },
+  {
+    id: '10',
+    title: 'Typed DOM and events',
+    load: () => import('@/demos/10-typed-dom-and-events'),
+  },
+  {
+    id: '11',
+    title: 'Async and typed HTTP',
+    load: () => import('@/demos/11-async-and-typed-fetch'),
+  },
+  {
+    id: '12',
+    title: 'Compiler strictness',
+    load: () => import('@/demos/12-tsconfig-strictness'),
+  },
 ];
 
 for (const entry of demoEntries) {
