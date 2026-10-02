@@ -65,6 +65,23 @@ export default tseslint.config(
   },
 
   {
+    // Arquivos de ERRO INTENCIONAL: o compilador está rejeitando o código de propósito,
+    // então as expressões têm tipo "error/any" em runtime de análise. As regras que
+    // leem tipos quebrados (no-unsafe-*) não têm o que verificar aqui — os DIRETIVOS
+    // @ts-expect-error continuam sendo validados pelo tsc, que é a autoridade real.
+    files: ['src/demos/errors/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+      '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/no-unused-expressions': 'off',
+      '@typescript-eslint/dot-notation': 'off',
+    },
+  },
+
+  {
     // REGRA DE CAMADAS: infraestrutura base (core/utils) não pode conhecer demos
     // nem components. Enforçada pelo ESLint — violação quebra o `npm run lint`.
     files: ['src/core/**/*.ts', 'src/utils/**/*.ts'],
