@@ -15,6 +15,9 @@
     "moduleDetection": "force",
     /* Resolução de imports sem extensão, igual à que o Vite aplica em runtime. */
     "moduleResolution": "bundler",
+    /* Espelha o alias do Vite (`@` -> src/): sem isso o tsc e o bundler discordariam
+       sobre a que arquivo um import se refere — typecheck e build precisam falar a mesma língua. */
+    "paths": { "@/*": ["./src/*"] },
 
     /* --- O núcleo do rigor do projeto ------------------------------------ */
     /* Modo estrito completo: a base de qualquer "strict TypeScript". */

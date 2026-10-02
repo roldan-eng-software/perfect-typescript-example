@@ -49,6 +49,18 @@ export default tseslint.config(
         'error',
         { prefer: 'type-imports', fixStyle: 'inline-type-imports' },
       ],
+
+      // DESLIGADA de propósito: em APIs de nível de tipo (Equal<A,B>, Expect<T>) e em
+      // helpers de DOM (qs<T>), o parâmetro de tipo É o contrato — é passado pelo chamador
+      // e não tem como aparecer duas vezes na assinatura. A regra puniria o propósito.
+      '@typescript-eslint/no-unnecessary-type-parameters': 'off',
+
+      // `T[]` para tipos simples; `Array<T>` para objetos/tuplas — legível e o que o
+      // Prettier também prefere (ex.: Array<[string, string]>).
+      '@typescript-eslint/array-type': ['error', { default: 'array-simple' }],
+
+      // Números em template literal são seguros e idiomáticos (`R$ ${value}`).
+      '@typescript-eslint/restrict-template-expressions': ['error', { allowNumber: true }],
     },
   },
 
