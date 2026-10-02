@@ -10,6 +10,7 @@
 import { h } from '@/core/dom';
 import type { Cleanup } from '@/core/demo-registry';
 import { err, ok, type Result } from '@/core/result';
+import type { JsonObject } from '@/types/domain';
 
 // ---------------------------------------------------------------------------
 // Lógica pura (testável sem DOM)
@@ -30,10 +31,10 @@ export interface ValidationIssue {
 }
 
 /**
- * Type predicate: a declaração `value is Record<string, unknown>` é uma AFIRMAÇÃO
- * verificável em runtime — depois do guard, o compilador permite `value[key]`.
+ * Type predicate: a declaração `value is JsonObject` é uma AFIRMAÇÃO verificável em
+ * runtime — depois do guard, o compilador permite `value[key]`.
  */
-export function isRecord(value: unknown): value is Record<string, unknown> {
+export function isRecord(value: unknown): value is JsonObject {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 

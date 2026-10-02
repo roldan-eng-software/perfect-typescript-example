@@ -9,6 +9,7 @@
 import { h } from '@/core/dom';
 import type { Cleanup } from '@/core/demo-registry';
 import { err, ok, type Result } from '@/core/result';
+import type { JsonObject } from '@/types/domain';
 
 // ---------------------------------------------------------------------------
 // Contratos
@@ -41,7 +42,7 @@ export interface FetchJsonOptions {
 // Validação da "API" (o JSON chega como unknown — nunca como Product[])
 // ---------------------------------------------------------------------------
 
-function isRecord(value: unknown): value is Record<string, unknown> {
+function isRecord(value: unknown): value is JsonObject {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
