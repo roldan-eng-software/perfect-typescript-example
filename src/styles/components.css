@@ -11,7 +11,8 @@
 code-peek,
 error-showcase,
 demo-section,
-theme-toggle {
+theme-toggle,
+lang-toggle {
   display: block;
 }
 
@@ -75,6 +76,21 @@ theme-toggle {
   margin: 0;
   color: var(--color-text-muted);
   font-size: 0.925rem;
+}
+
+/* Moldura interna montada por <demo-section>. */
+.demo-section__status {
+  margin-bottom: var(--space-2);
+  font-size: 0.925rem;
+  color: var(--color-text-muted);
+}
+
+.demo-section__status:empty {
+  display: none;
+}
+
+.demo-section__content {
+  min-height: 2rem;
 }
 
 /* --- Controle segmentado (tema: claro | escuro | sistema) --- */
@@ -166,10 +182,13 @@ theme-toggle {
   outline-offset: -2px;
 }
 
-/* Faixa destacada quando o atributo `lines` delimita um trecho. */
-.code-peek .line--highlight {
-  display: inline-block;
-  width: 100%;
+/* Cada linha é um bloco: a faixa do atributo `lines` ocupa a largura toda. */
+.code-peek .code-line {
+  display: block;
+  min-height: 1.55em;
+}
+
+.code-peek .code-line.line--highlight {
   background: var(--code-highlight-bg);
 }
 
