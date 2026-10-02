@@ -1,0 +1,58 @@
+{
+  // =============================================================================
+  // tsconfig.json — código da aplicação (src/ e tests/).
+  // Cada flag traz o "porquê" da ativação: este arquivo é parte da demonstração.
+  // Verificado empiricamente com TypeScript 6.0.3 (tsc falha se uma opção não existir).
+  // =============================================================================
+  "compilerOptions": {
+    /* Nível de saída: ES2023 cobre os navegadores atuais sem polyfill de métodos novos. */
+    "target": "ES2023",
+    /* DOM + ES2023: o código roda no navegador; DOM.Iterable permite for..of em NodeList. */
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    /* ESM puro: o Vite (esbuild) faz o transpile; nunca emitimos JS daqui. */
+    "module": "ESNext",
+    /* Força todo arquivo a ser módulo — evita que uma variável solta vire global acidental. */
+    "moduleDetection": "force",
+    /* Resolução de imports sem extensão, igual à que o Vite aplica em runtime. */
+    "moduleResolution": "bundler",
+
+    /* --- O núcleo do rigor do projeto ------------------------------------ */
+    /* Modo estrito completo: a base de qualquer "strict TypeScript". */
+    "strict": true,
+    /* `lista[0]` passa a ser `T | undefined` — combate o bug clássico de índice fora do intervalo. */
+    "noUncheckedIndexedAccess": true,
+    /* `{ a?: string }` NÃO aceita `{ a: undefined }` explícito: opcional !== undefined. */
+    "exactOptionalPropertyTypes": true,
+    /* Subclasses precisam declarar `override` — evita sobrescrever um membro sem querer. */
+    "noImplicitOverride": true,
+    /* Todo caminho de uma função com retorno deve retornar (sem return implícito esquecido). */
+    "noImplicitReturns": true,
+    /* `case` sem `break`/`return` (fallthrough) vira erro — protege os switches exaustivos. */
+    "noFallthroughCasesInSwitch": true,
+    /* Variáveis não usadas viram erro em vez de lixo silencioso. */
+    "noUnusedLocals": true,
+    /* Parâmetros não usados viram erro (use `_` no nome para sinalizar intencional). */
+    "noUnusedParameters": true,
+
+    /* --- Contrato com o bundler ------------------------------------------ */
+    /* Exige `import type`/`export type` para tipos e preserva os imports literais no emit.
+       É o que garante o uso consistente de import type exigido pelo projeto. */
+    "verbatimModuleSyntax": true,
+    /* Cada arquivo deve ser compilável isoladamente (sem dependência de type-elision do
+       compilador) — pré-requisito do pipeline de transpile do Vite/esbuild. */
+    "isolatedModules": true,
+
+    /* --- Padrões / desempenho -------------------------------------------- */
+    /* Não valida .d.ts de node_modules: padrão da indústria, corta minutos de checagem
+       sem abrir mão do rigor sobre o nosso próprio código. */
+    "skipLibCheck": true,
+    /* Só type-check, nunca emitir JS — quem emite é o Vite. */
+    "noEmit": true,
+    /* Não injeta automaticamente nenhum @types global: impede uso acidental de APIs de
+       Node (process, fs…) no código de navegador. O que for legítimo é referenciado
+       explicitamente (ex.: tsconfig.node.json usa types: ["node"]). */
+    "types": []
+  },
+  "include": ["src", "tests"],
+  "exclude": ["dist", "node_modules"]
+}

@@ -1,0 +1,30 @@
+{
+  "name": "perfect-typescript-example",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Landing page que demonstra técnicas avançadas de TypeScript — sem frameworks e sem dependências de runtime.",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.node.json",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "test": "vitest run",
+    "test:types": "vitest run --typecheck --typecheck.only",
+    "check": "npm run typecheck && npm run lint && npm run test && npm run test:types && npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "eslint": "^10.11.0",
+    "prettier": "^3.9.9",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.71.0",
+    "vite": "^8.3.2",
+    "vitest": "^5.0.3"
+  }
+}

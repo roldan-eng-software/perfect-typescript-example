@@ -1,0 +1,120 @@
+/**
+ * @file tokens.css
+ * @purpose Design tokens do projeto: cores, tipografia, espaçamento e raios.
+ * @techniques Custom properties CSS; tema claro (padrão), escuro e "padrão do sistema"
+ *            via data-theme + prefers-color-scheme; contraste WCAG AA verificado.
+ * @usedBy index.html (carregado antes de base.css e components.css).
+ */
+
+:root {
+  color-scheme: light;
+
+  /* --- Tipografia --- */
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+
+  /* --- Espaçamento (escala 4px) --- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  /* --- Raios --- */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* --- Movimento (desativado em prefers-reduced-motion, ver base.css) --- */
+  --transition-fast: 120ms ease;
+
+  /* ===================== PALETA CLARA (padrão) ===================== */
+  --color-bg: #ffffff;
+  --color-surface: #f4f6f8;
+  --color-surface-2: #eaedf1;
+  --color-text: #16181d; /* 16.4:1 sobre branco */
+  --color-text-muted: #555b66; /* 6.8:1 sobre branco */
+  --color-border: #d6dae1;
+  --color-accent: #0b57d0; /* fundo de botão; texto branco 6.4:1 */
+  --color-accent-hover: #0847ad;
+  --color-accent-text: #0b57d0; /* 6.4:1 sobre branco (links) */
+  --color-focus: #0b57d0;
+  --color-success: #1a7f37;
+  --color-danger: #b42318; /* 5.5:1 sobre branco */
+
+  /* --- Tokens de realce de sintaxe (contraste AA sobre --code-bg) --- */
+  --code-bg: #f6f8fa;
+  --code-fg: #1f2328;
+  --code-comment: #57606a; /* 5.8:1 */
+  --code-keyword: #cf222e; /* 5.5:1 */
+  --code-string: #0a3069; /* 11.6:1 */
+  --code-number: #0550ae; /* 6.9:1 */
+  --code-type: #953800; /* 6.7:1 */
+  --code-decorator: #8250df; /* 5.1:1 */
+  --code-inline-bg: #eff1f3;
+  --code-highlight-bg: #fff8c5; /* fundo da faixa destacada (lines="10-40") */
+}
+
+/* ===================== PALETA ESCURA ===================== */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --color-bg: #0d1117;
+  --color-surface: #161b22;
+  --color-surface-2: #1f262e;
+  --color-text: #e6edf3; /* 14.5:1 sobre o fundo */
+  --color-text-muted: #9aa4b0; /* 6.9:1 */
+  --color-border: #30363d;
+  --color-accent: #1f6feb; /* texto branco 4.6:1 (AA) */
+  --color-accent-hover: #388bfd;
+  --color-accent-text: #79c0ff; /* 8:1 sobre o fundo */
+  --color-focus: #79c0ff;
+  --color-success: #3fb950;
+  --color-danger: #f85149;
+
+  --code-bg: #161b22;
+  --code-fg: #e6edf3;
+  --code-comment: #9198a1; /* 6.0:1 */
+  --code-keyword: #ff7b72; /* 6.1:1 */
+  --code-string: #a5d6ff; /* 10.7:1 */
+  --code-number: #79c0ff; /* 8.8:1 */
+  --code-type: #ffa657; /* 8.3:1 */
+  --code-decorator: #d2a8ff; /* 8.3:1 */
+  --code-inline-bg: #21262d;
+  --code-highlight-bg: #3d3317;
+}
+
+/* Modo "sistema": só aplica o escuro quando o SO do visitante prefere escuro.
+   Padrão (sem data-theme explícito) permanece CLARO — decisão do projeto. */
+@media (prefers-color-scheme: dark) {
+  :root[data-theme='system'] {
+    color-scheme: dark;
+
+    --color-bg: #0d1117;
+    --color-surface: #161b22;
+    --color-surface-2: #1f262e;
+    --color-text: #e6edf3;
+    --color-text-muted: #9aa4b0;
+    --color-border: #30363d;
+    --color-accent: #1f6feb;
+    --color-accent-hover: #388bfd;
+    --color-accent-text: #79c0ff;
+    --color-focus: #79c0ff;
+    --color-success: #3fb950;
+    --color-danger: #f85149;
+
+    --code-bg: #161b22;
+    --code-fg: #e6edf3;
+    --code-comment: #9198a1;
+    --code-keyword: #ff7b72;
+    --code-string: #a5d6ff;
+    --code-number: #79c0ff;
+    --code-type: #ffa657;
+    --code-decorator: #d2a8ff;
+    --code-inline-bg: #21262d;
+    --code-highlight-bg: #3d3317;
+  }
+}

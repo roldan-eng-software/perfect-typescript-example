@@ -1,0 +1,11 @@
+# Dependências e artefatos de build
+node_modules/
+dist/
+coverage/
+
+# Locais
+*.local
+.DS_Store
+
+# Ambiente local do Claude Code (não faz parte do projeto publicado)
+.claude/

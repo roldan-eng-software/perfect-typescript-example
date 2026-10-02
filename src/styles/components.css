@@ -1,0 +1,276 @@
+/**
+ * @file components.css
+ * @purpose Estilos dos elementos da interface: botões, pills, moldura das demos,
+ *          <code-peek>, <error-showcase> e controle de tema.
+ * @techniques Custom elements em light DOM (estiláveis daqui); classes BEM enxutas;
+ *            tokens de cor do sintaxe vindo de tokens.css.
+ * @usedBy index.html + todos os custom elements de src/components/.
+ */
+
+/* Custom elements ainda não registrados (ou sempre) ocupam o fluxo em bloco. */
+code-peek,
+error-showcase,
+demo-section,
+theme-toggle {
+  display: block;
+}
+
+/* --- Botões --- */
+.btn {
+  font: inherit;
+  font-size: 0.875rem;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.btn:hover {
+  background: var(--color-surface-2);
+}
+
+.btn--primary {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #ffffff;
+}
+
+.btn--primary:hover {
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+}
+
+/* --- Pills do hero (informação, não ação) --- */
+.pill {
+  display: inline-block;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+}
+
+.pill--accent {
+  color: var(--color-accent-text);
+  border-color: currentcolor;
+}
+
+/* --- Moldura de cada demonstração --- */
+.demo-slot {
+  min-height: 8rem;
+  margin: var(--space-4) 0;
+  padding: var(--space-4);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.demo-slot__placeholder {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.925rem;
+}
+
+/* --- Controle segmentado (tema: claro | escuro | sistema) --- */
+.segmented {
+  display: inline-flex;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.segmented__option {
+  font: inherit;
+  font-size: 0.8rem;
+  padding: var(--space-1) var(--space-3);
+  border: none;
+  border-right: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.segmented__option:last-child {
+  border-right: none;
+}
+
+.segmented__option[aria-pressed='true'] {
+  background: var(--color-accent);
+  color: #ffffff;
+}
+
+/* --- <code-peek>: painel com o código real do repositório --- */
+.code-peek {
+  margin-top: var(--space-3);
+}
+
+.code-peek__summary,
+.code-peek__toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  font: inherit;
+  font-size: 0.875rem;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  cursor: pointer;
+  text-align: left;
+}
+
+.code-peek__path {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.code-peek__actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-left: auto;
+}
+
+.code-peek__panel {
+  border: 1px solid var(--color-border);
+  border-top: none;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  background: var(--code-bg);
+}
+
+.code-peek__panel[hidden] {
+  display: none;
+}
+
+.code-peek pre {
+  margin: 0;
+  padding: var(--space-3);
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  tab-size: 2;
+}
+
+/* Área de código focável (navegação por teclado dentro do bloco). */
+.code-peek pre:focus-visible {
+  outline-offset: -2px;
+}
+
+/* Faixa destacada quando o atributo `lines` delimita um trecho. */
+.code-peek .line--highlight {
+  display: inline-block;
+  width: 100%;
+  background: var(--code-highlight-bg);
+}
+
+.code-peek__error {
+  padding: var(--space-3);
+  color: var(--color-danger);
+  font-size: 0.925rem;
+}
+
+.code-peek__status {
+  font-size: 0.8rem;
+  color: var(--color-success);
+  min-width: 5.5rem;
+}
+
+/* --- Realce de sintaxe (tokens gerados pelo tokenizador próprio) --- */
+.tok-comment {
+  color: var(--code-comment);
+  font-style: italic;
+}
+.tok-string {
+  color: var(--code-string);
+}
+.tok-number {
+  color: var(--code-number);
+}
+.tok-keyword {
+  color: var(--code-keyword);
+  font-weight: 600;
+}
+.tok-type {
+  color: var(--code-type);
+}
+.tok-decorator {
+  color: var(--code-decorator);
+}
+
+/* --- <error-showcase>: o que o compilador recusa --- */
+.error-showcase__title {
+  margin: var(--space-3) 0 var(--space-2);
+  font-size: 0.925rem;
+  font-weight: 700;
+  color: var(--color-danger);
+}
+
+.error-card {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-danger);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.error-card__line {
+  display: block;
+  padding: var(--space-1) var(--space-2);
+  background: var(--code-bg);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.error-card__line--expect {
+  border-left: 3px solid var(--color-danger);
+  background: var(--code-highlight-bg);
+}
+
+.error-card__message {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.error-card__message strong {
+  color: var(--color-danger);
+}
+
+/* --- Tabelas documentais (ex.: tabela de flags do tsconfig) --- */
+.doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  margin-top: var(--space-3);
+}
+
+.doc-table th,
+.doc-table td {
+  text-align: left;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  vertical-align: top;
+}
+
+.doc-table th {
+  background: var(--color-surface-2);
+}
+
+.doc-table code {
+  white-space: nowrap;
+}

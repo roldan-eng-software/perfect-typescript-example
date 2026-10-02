@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en-US" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title data-i18n="meta.title">
+      Perfect TypeScript Example — TypeScript techniques, demonstrated
+    </title>
+    <meta
+      name="description"
+      data-i18n-content="meta.description"
+      content="Twelve interactive demonstrations of advanced TypeScript techniques — strict compiler, runtime-tested, zero runtime dependencies."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/src/styles/tokens.css" />
+    <link rel="stylesheet" href="/src/styles/base.css" />
+    <link rel="stylesheet" href="/src/styles/components.css" />
+    <script>
+      // Aplica o tema salvo ANTES do primeiro paint para evitar "flash" de tema errado.
+      // Padrão: claro — o escuro só é usado se o visitante escolher "dark" ou "system".
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme'); // 'light' | 'dark' | 'system' | null
+          var theme = stored === 'dark' || stored === 'system' ? stored : 'light';
+          document.documentElement.dataset.theme = theme;
+        } catch (error) {
+          document.documentElement.dataset.theme = 'light';
+        }
+      })();
+    </script>
+  </head>
+  <body id="top">
+    <a class="skip-link" href="#main" data-i18n="skip.toMain">Skip to main content</a>
+
+    <header class="site-header">
+      <a class="site-header__brand" href="#top">Roldan Eng Software</a>
+      <nav class="site-nav" aria-label="Demonstrations" data-i18n-aria="nav.sections">
+        <ol>
+          <li>
+            <a href="#inference"
+              ><span aria-hidden="true">01</span><span data-i18n="nav.s01">Inference</span></a
+            >
+          </li>
+          <li>
+            <a href="#generics"
+              ><span aria-hidden="true">02</span><span data-i18n="nav.s02">Generics</span></a
+            >
+          </li>
+          <li>
+            <a href="#utility-types"
+              ><span aria-hidden="true">03</span><span data-i18n="nav.s03">Utilities</span></a
+            >
+          </li>
+          <li>
+            <a href="#unions"
+              ><span aria-hidden="true">04</span><span data-i18n="nav.s04">Unions</span></a
+            >
+          </li>
+          <li>
+            <a href="#guards"
+              ><span aria-hidden="true">05</span><span data-i18n="nav.s05">Guards</span></a
+            >
+          </li>
+          <li>
+            <a href="#routes"
+              ><span aria-hidden="true">06</span><span data-i18n="nav.s06">Routes</span></a
+            >
+          </li>
+          <li>
+            <a href="#satisfies"
+              ><span aria-hidden="true">07</span><span data-i18n="nav.s07">Satisfies</span></a
+            >
+          </li>
+          <li>
+            <a href="#branded"
+              ><span aria-hidden="true">08</span><span data-i18n="nav.s08">Branded</span></a
+            >
+          </li>
+          <li>
+            <a href="#result"
+              ><span aria-hidden="true">09</span><span data-i18n="nav.s09">Result</span></a
+            >
+          </li>
+          <li>
+            <a href="#typed-dom"
+              ><span aria-hidden="true">10</span><span data-i18n="nav.s10">Typed DOM</span></a
+            >
+          </li>
+          <li>
+            <a href="#async-fetch"
+              ><span aria-hidden="true">11</span><span data-i18n="nav.s11">Fetch</span></a
+            >
+          </li>
+          <li>
+            <a href="#strictness"
+              ><span aria-hidden="true">12</span><span data-i18n="nav.s12">Strictness</span></a
+            >
+          </li>
+        </ol>
+      </nav>
+      <div class="site-header__actions">
+        <button type="button" class="btn" id="lang-toggle">Português (Brasil)</button>
+        <theme-toggle></theme-toggle>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- ============================ HERO ============================ -->
+      <section class="hero" aria-labelledby="hero-title">
+        <p class="hero__eyebrow">Roldan Eng Software</p>
+        <h1 id="hero-title" data-i18n="hero.title">Perfect TypeScript Example</h1>
+        <p class="hero__lead" data-i18n="hero.lead">
+          Twelve interactive demonstrations of advanced TypeScript techniques — every claim on this
+          page is backed by the strict compiler and the test suite. Read the code, open the
+          repository, run the checks.
+        </p>
+        <ul class="hero__pills">
+          <li class="pill pill--accent" data-i18n="hero.pillStrict">Strict compiler, zero any</li>
+          <li class="pill" data-i18n="hero.pillZero">Zero runtime dependencies</li>
+          <li class="pill" data-i18n="hero.pillTooling">Vite + Vitest + ESLint</li>
+        </ul>
+        <p class="hero__author">
+          <span data-i18n="hero.compiledWith">This page is compiled with</span>
+          <code id="ts-version">TypeScript</code>
+        </p>
+        <div class="hero__author">
+          <span data-i18n="hero.author"
+            >By Sandro — fullstack developer and entrepreneur building SaaS products in
+            Brazil.</span
+          >
+          <nav class="hero__links" aria-label="Author links" data-i18n-aria="hero.linksLabel">
+            <a href="TODO">LinkedIn</a>
+            <a href="TODO">GitHub</a>
+            <a href="TODO">Email</a>
+          </nav>
+        </div>
+      </section>
+
+      <!-- ========================= DEMONSTRAÇÕES ========================= -->
+
+      <section id="inference" class="demo" aria-labelledby="inference-title">
+        <h2 id="inference-title" data-i18n="demo01.title">Inference and narrowing</h2>
+        <p class="demo__summary" data-i18n="demo01.summary">
+          The compiler infers literal types and narrows unions through runtime guards. Type into the
+          field below and see which branch of typeof / in / instanceof was taken.
+        </p>
+        <div class="demo-slot" data-demo="01">
+          <p class="demo-slot__placeholder" data-i18n="slot.loading">
+            This interactive demo initializes when the section enters the viewport.
+          </p>
+        </div>
+        <code-peek src="src/demos/01-inference-and-narrowing.ts"></code-peek>
+      </section>
+
+      <section id="generics" class="demo" aria-labelledby="generics-title">
+        <h2 id="generics-title" data-i18n="demo02.title">Generics with constraints</h2>
+        <p class="demo__summary" data-i18n="demo02.summary">
+          Reusable utilities — pipe, groupBy and a typed store — built with constraints, defaults
+          and const type parameters. Transform a list and inspect the result type.
+        </p>
+        <div class="demo-slot" data-demo="02">
+          <p class="demo-slot__placeholder" data-i18n="slot.loading">
+            This interactive demo initializes when the section enters the viewport.
+          </p>
+        </div>
+        <code-peek src="src/demos/02-generics.ts"></code-peek>
+        <error-showcase src="src/demos/errors/02-generics.errors.ts"></error-showcase>
+      </section>
+
+      <section id="utility-types" class="demo" aria-labelledby="utility-types-title">
+        <h2 id="utility-types-title" data-i18n="demo03.title">Utility types in practice</h2>
+        <p class="demo__summary" data-i18n="demo03.summary">
+          One User type derives an entire form model: Partial, Required, Pick, Omit, Record,
+          Extract, ReturnType, Parameters and Awaited from a single source of truth.
+        </p>
+        <div class="demo-slot" data-demo="03">
+          <p class="demo-slot__placeholder" data-i18n="slot.loading">
+            This interactive demo initializes when the section enters the viewport.
+          </p>
+        </div>
+        <code-peek src="src/demos/03-utility-types.ts"></code-peek>
+      </section>
+
+      <section id="unions" class="demo" aria-labelledby="unions-title">
+        <h2 id="unions-title" data-i18n="demo04.title">Discriminated unions and exhaustiveness</h2>
+        <p class="demo__summary" data-i18n="demo04.summary">
+          A request state machine (idle, loading, success, error) rendered by an exhaustive switch.
+          Add an unhandled state and the compiler refuses to build.
+        </p>
+        <div class="demo-slot" data-demo="04">
+          <p class="demo-slot__placeholder" data-i18n="slot.loading">
+            This interactive demo initializes when the section enters the viewport.
+          </p>
+        </div>
+        <code-peek src="src/demos/04-discriminated-unions.ts"></code-peek>
+        <error-showcase src="src/demos/errors/04-unions.errors.ts"></error-showcase>
+      </section>
+
+      <section id="guards" class="demo" aria-labelledby="guards-title">
+        <h2 id="guards-title" data-i18n="demo05.title">Type guards and unknown</h2>
+        <p class="demo__summary" data-i18n="demo05.summary">
+          Paste raw JSON and watch hand-written type predicates turn unknown into a validated shape
+          — with errors listed per path. See why unknown beats any.
+        </p>
+        <div class="demo-slot" data-demo="05">
+          <p class="demo-slot__placeholder" data-i18n="slot.loading">
+            This interactive demo initializes when the section enters the viewport.
+          </p>
+        </div>
+        <code-peek src="src/demos/05-type-guards-and-unknown.ts"></code-peek>
+      </section>
+
+      <section id="routes" class="demo" aria-labelledby="routes-title">
+        <h2 id="routes-title" data-i18n="demo06.title">Mapped, conditional and template types</h2>
+        <p class="demo__summary" data-i18n="demo06.summary">
+          A typed route parser: "/users/:id" becomes { id: string } through infer, key remapping and
+          template literal types. Type a route and see the extracted params.
+        </p>
+        <div class="demo-slot" data-demo="06">
+          <p class="demo-slot__placeholder" data-i18n="slot.loading">
+            This interactive demo initializes when the section enters the viewport.
+          </p>
+        </div>
+        <code-peek src="src/demos/06-mapped-conditional-template.ts"></code-peek>
+      </section>
+
+      <section id="satisfies" class="demo" aria-labelledby="satisfies-title">
+        <h2 id="satisfies-title" data-i18n="demo07.title">Satisfies and as const</h2>
+        <p class="demo__summary" data-i18n="demo07.summary">
+          Theme configuration validated with satisfies while keeping literal types intact — compared
+          side by side with plain type annotations and assertions.
+        </p>
+        <div class="demo-slot" data-demo="07">
+          <p class="demo-slot__placeholder" data-i18n="slot.loading">
+            This interactive demo initializes when the section enters the viewport.
+          </p>
+        </div>
+        <code-peek src="src/demos/07-satisfies-and-const.ts"></code-peek>
+      </section>
+
+      <section id="branded" class="demo" aria-labelledby="branded-title">
+        <h2 id="branded-title" data-i18n="demo08.title">Branded types</h2>
+        <p class="demo__summary" data-i18n="demo08.summary">
+          UserId, OrderId and Money are nominally distinct — mixing them is a compile error. Try the
+          cross-use below and read the real error emitted by the compiler.
+        </p>
+        <div class="demo-slot" data-demo="08">
+          <p class="demo-slot__placeholder" data-i18n="slot.loading">
+            This interactive demo initializes when the section enters the viewport.
+          </p>
+        </div>
+        <code-peek src="src/demos/08-branded-types.ts"></code-peek>
+        <error-showcase src="src/demos/errors/08-branded.errors.ts"></error-showcase>
+      </section>
+
+      <section id="result" class="demo" aria-labelledby="result-title">
+        <h2 id="result-title" data-i18n="demo09.title">Result&lt;T, E&gt; and error handling</h2>
+        <p class="demo__summary" data-i18n="demo09.summary">
+          A value parser returns ok/err instead of throwing. Follow the success and failure flows
+          and compare them with classic try/catch.
+        </p>
+        <div class="demo-slot" data-demo="09">
+          <p class="demo-slot__placeholder" data-i18n="slot.loading">
+            This interactive demo initializes when the section enters the viewport.
+          </p>
+        </div>
+        <code-peek src="src/demos/09-result-error-handling.ts"></code-peek>
+      </section>
+
+      <section id="typed-dom" class="demo" aria-labelledby="typed-dom-title">
+        <h2 id="typed-dom-title" data-i18n="demo10.title">Typed DOM and events</h2>
+        <p class="demo__summary" data-i18n="demo10.summary">
+          Generic query helpers, a typed event bus with an event map, function overloads and a
+          custom element registered on HTMLElementTagNameMap.
+        </p>
+        <div class="demo-slot" data-demo="10">
+          <p class="demo-slot__placeholder" data-i18n="slot.loading">
+            This interactive demo initializes when the section enters the viewport.
+          </p>
+        </div>
+        <code-peek src="src/demos/10-typed-dom-and-events.ts"></code-peek>
+      </section>
+
+      <section id="async-fetch" class="demo" aria-labelledby="async-fetch-title">
+        <h2 id="async-fetch-title" data-i18n="demo11.title">Async and typed HTTP</h2>
+        <p class="demo__summary" data-i18n="demo11.summary">
+          fetchJson&lt;T&gt; with runtime validation, AbortController, timeout and retry — exercised
+          against a local JSON file, no external network.
+        </p>
+        <div class="demo-slot" data-demo="11">
+          <p class="demo-slot__placeholder" data-i18n="slot.loading">
+            This interactive demo initializes when the section enters the viewport.
+          </p>
+        </div>
+        <code-peek src="src/demos/11-async-and-typed-fetch.ts"></code-peek>
+      </section>
+
+      <section id="strictness" class="demo" aria-labelledby="strictness-title">
+        <h2 id="strictness-title" data-i18n="demo12.title">Compiler strictness</h2>
+        <p class="demo__summary" data-i18n="demo12.summary">
+          Every tsconfig flag explained with the real error it prevents, a live example and a
+          cost/benefit table. Rigor you can read in the config.
+        </p>
+        <div class="demo-slot" data-demo="12">
+          <p class="demo-slot__placeholder" data-i18n="slot.loading">
+            This interactive demo initializes when the section enters the viewport.
+          </p>
+        </div>
+        <code-peek src="src/demos/12-tsconfig-strictness.ts"></code-peek>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <p>
+          <strong>Roldan Eng Software</strong> —
+          <span data-i18n="footer.tagline"
+            >Sandro, fullstack developer and entrepreneur building SaaS products in Brazil.</span
+          >
+        </p>
+        <p data-i18n="footer.note">
+          100% TypeScript, zero runtime dependencies, validated by the compiler and the test suite.
+        </p>
+        <nav aria-label="Footer links" data-i18n-aria="footer.linksLabel">
+          <a href="TODO">LinkedIn</a>
+          <a href="TODO">GitHub</a>
+          <a href="TODO">Email</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

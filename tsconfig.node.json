@@ -1,0 +1,31 @@
+{
+  // =============================================================================
+  // tsconfig.node.json — arquivos de configuração que rodam no Node (vite.config.ts).
+  // Separado do tsconfig.json para que "types": ["node"] não vaze para o código de browser.
+  // =============================================================================
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "moduleDetection": "force",
+
+    /* Mesmo nível de rigor do app: a configuração de build também é código revisável. */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+
+    /* APIs de Node (node:module, node:url) são legítimas aqui e SÓ aqui. */
+    "types": ["node"]
+  },
+  "include": ["vite.config.ts"]
+}
