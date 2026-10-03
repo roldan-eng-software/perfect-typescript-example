@@ -113,16 +113,38 @@ Ambas as verificações estão documentadas em `src/demos/12-tsconfig-strictness
 
 ## Compatibilidade (verificada, não presumida)
 
-| Item                  | Versão / política                                                                                                                                                                                                                             |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **TypeScript**        | **6.0.x** (travado em `~6.0.3`). Motivo: o `typescript-eslint@8.71.0` exige peer `>=4.8.4 <6.1.0`; 7.x ainda não é suportado por ele. Todo o catálogo abaixo compila nesta versão (`npm run typecheck` = prova executável).                   |
-| **Node.js**           | `>=22.12` (campo `engines`; exigência do Vite 8). CI usa Node 22.                                                                                                                                                                             |
-| **Navegadores**       | Sintaxe entregue pelo pipeline default do Vite 8 sobre o alvo do projeto (`target: ES2023` no tsconfig). Smoke test executado no **Edge headless (Chromium)** — 12/12 demos montam, zero erros de console. Auditoria Lighthouse: ver “TODOs”. |
-| **APIs de runtime**   | `custom elements`, `AbortController`, `IntersectionObserver`, `Intl`, `matchMedia`, `localStorage` (com `try/catch`), Clipboard API (com fallback de mensagem) — todas com suporte consolidado em motores atuais.                             |
-| **Recursos recentes** | `satisfies`, `const` type parameters, key remapping, template literal types: **type-level puro** — compilam no 6.0.3 e não exigem nada do navegador. Decorators e `using`: excluídos (evidência acima).                                       |
+| Item                  | Versão / política                                                                                                                                                                                                                                                               |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **TypeScript**        | **6.0.x** (travado em `~6.0.3`). Motivo: o `typescript-eslint@8.71.0` exige peer `>=4.8.4 <6.1.0`; 7.x ainda não é suportado por ele. Todo o catálogo abaixo compila nesta versão (`npm run typecheck` = prova executável).                                                     |
+| **Node.js**           | `>=22.12` (campo `engines`; exigência do Vite 8). CI usa Node 22.                                                                                                                                                                                                               |
+| **Navegadores**       | Sintaxe entregue pelo pipeline default do Vite 8 sobre o alvo do projeto (`target: ES2023` no tsconfig). Smoke test executado no **Edge headless (Chromium)** — 12/12 demos montam, zero erros de console. Auditoria Lighthouse: **99/100/100/100** (ver seção própria abaixo). |
+| **APIs de runtime**   | `custom elements`, `AbortController`, `IntersectionObserver`, `Intl`, `matchMedia`, `localStorage` (com `try/catch`), Clipboard API (com fallback de mensagem) — todas com suporte consolidado em motores atuais.                                                               |
+| **Recursos recentes** | `satisfies`, `const` type parameters, key remapping, template literal types: **type-level puro** — compilam no 6.0.3 e não exigem nada do navegador. Decorators e `using`: excluídos (evidência acima).                                                                         |
 
 > Não afirmamos versões mínimas históricas por recurso: o que se garante é que **o
 > projeto inteiro compila e roda na versão documentada**, verificável com um comando.
+
+---
+
+## Auditoria (Lighthouse)
+
+Medição real no **site publicado** (e reproduzível no `npm run preview`), Lighthouse 13.5.0
+via Edge headless, 03/10/2026:
+
+| Performance | Acessibilidade | Best Practices |   SEO   |
+| :---------: | :------------: | :------------: | :-----: |
+|   **99**    |    **100**     |    **100**     | **100** |
+
+- FCP 0,8 s · TBT **0 ms** · LCP ~1,3 s · CLS dentro da meta · zero violações axe.
+- O caminho até 99 foi medido, não chutado — cada otimização teve antes/depois:
+  1. removido `scroll-behavior: smooth` (anima os scrolls programáticos do audit);
+  2. **CSS embutido no HTML** pelo plugin próprio `inlineStylesIntoHtml()`
+     (o `<link>` render-blocking custava ~178 ms de desperdício);
+  3. **`<code-peek>` e `<error-showcase>` adiados** até perto da viewport
+     (24 shells construídos no load viravam long tasks de ~460 ms);
+  4. `content-visibility: auto` foi testado e **removido**: mediu PIOR
+     (style/layout 1754 → 2151 ms, porque o screenshot de página inteira do audit
+     força a renderização de tudo). A nota está no próprio `base.css`.
 
 ---
 
@@ -300,9 +322,7 @@ Itens pendentes deste repositório (mantidos atualizados nesta lista):
 
 1. **Links do autor** — preencher os `href` de LinkedIn, GitHub e e-mail: 6 ocorrências
    em `index.html` (hero + rodapé) e 3 nesta seção “Sobre o autor”.
-2. **Lighthouse** — rodar a auditoria (Performance / Accessibility / Best Practices / SEO)
-   no deploy publicado e registrar o resultado (meta: 95+ em todas as categorias).
-3. **Badges adicionais** — opcional: badge de licença e de tamanho do bundle, se desejado.
+2. **Badges adicionais** — opcional: badge de licença e de tamanho do bundle, se desejado.
 
 > Fora do código: habilitar/atualizar a descrição do repositório no GitHub, se desejado.
 > O deploy em si já funciona — workflow `Deploy to GitHub Pages` roda a cada push em `main`.

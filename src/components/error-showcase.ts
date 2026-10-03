@@ -68,6 +68,26 @@ export class ErrorShowcase extends HTMLElement {
     if (this.#listElement !== null) {
       return; // já construído (idempotente para upgrade/HMR)
     }
+
+    /**
+     * Construção ADIADA até a seção chegar perto da viewport (mesmo motivo do
+     * <code-peek>): montar os 3 cartões-parede junto do load gerava long tasks
+     * no Lighthouse. Depois do shell pronto, o IO de CARGA do arquivo começa.
+     */
+    const shellObserver = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          shellObserver.disconnect();
+          this.#buildShell();
+          this.#observeForLoad();
+        }
+      },
+      { rootMargin: '300px 0px' },
+    );
+    shellObserver.observe(this);
+  }
+
+  #buildShell(): void {
     this.classList.add('error-showcase');
 
     this.#titleElement = h('h3', { text: '' });
@@ -83,9 +103,11 @@ export class ErrorShowcase extends HTMLElement {
       this.#renderTexts();
       this.#renderCards();
     });
+  }
 
-    // IntersectionObserver: o arquivo só é buscado quando a seção está perto da viewport
-    // (performance: nenhum custo de I/O para quem não chega até aqui).
+  #observeForLoad(): void {
+    // IntersectionObserver: o arquivo só é buscado quando a seção está perto da
+    // viewport (performance: nenhum custo de I/O para quem não chega até aqui).
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries.some((entry) => entry.isIntersecting)) {

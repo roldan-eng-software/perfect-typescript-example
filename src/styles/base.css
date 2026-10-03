@@ -13,11 +13,6 @@
   box-sizing: border-box;
 }
 
-html {
-  /* Rolagem suave, mas respeitando quem prefere menos movimento (bloco no fim). */
-  scroll-behavior: smooth;
-}
-
 body {
   margin: 0;
   background: var(--color-bg);
@@ -202,7 +197,11 @@ section[id] {
   gap: var(--space-3);
 }
 
-/* --- Seções de demonstração --- */
+/* --- Seções de demonstração ---
+   NOTA (verificado no Lighthouse): `content-visibility: auto` foi testado aqui e
+   PIOROU o tempo de style/layout (o screenshot de página inteira do audit força a
+   renderização de todas as seções — 1754 ms → 2151 ms medidos). Saiu do projeto;
+   o ganho real veio do CSS inline + shells adiados via IntersectionObserver. */
 .demo {
   padding: var(--space-6) 0;
   border-bottom: 1px solid var(--color-border);
@@ -243,10 +242,6 @@ section[id] {
 
 /* --- Acessibilidade: menos movimento, mais calma --- */
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
   *,
   *::before,
   *::after {

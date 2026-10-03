@@ -8,9 +8,58 @@
  */
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
-import { defineConfig } from 'vitest/config';
+import { defineConfig, type Plugin } from 'vitest/config';
 
 const require = createRequire(import.meta.url);
+
+/**
+ * Plugin próprio (zero dependências): no BUILD, embute o CSS gerado dentro do
+ * index.html e remove o asset .css. Motivo medido: o <link> render-blocking custava
+ * ~178 ms de desperdício no Lighthouse; com o CSS dentro do HTML, o primeiro paint
+ * não espera um request extra. No DEV o plugin não aplica (links seguem com HMR).
+ *
+ * O hook é `transformIndexHtml` na fase `post`: só ali o `ctx.bundle` existe e
+ * apontar para o bundle real (as tentativas com generateBundle rodam cedo demais —
+ * o HTML ainda não foi emitido — verificado empíricamente).
+ */
+function inlineStylesIntoHtml(): Plugin {
+  return {
+    name: 'inline-styles-into-html',
+    apply: 'build',
+    transformIndexHtml: {
+      order: 'post',
+      handler(html, ctx) {
+        const bundle = ctx.bundle;
+        if (bundle === undefined) {
+          return html;
+        }
+        let css = '';
+        for (const [fileName, output] of Object.entries(bundle)) {
+          if (output.type === 'asset' && fileName.endsWith('.css')) {
+            css +=
+              typeof output.source === 'string'
+                ? output.source
+                : Buffer.from(output.source).toString('utf8');
+            // Reflect.deleteProperty: `delete bundle[chave]` dinâmica é proibida pela
+            // regra no-dynamic-delete; o efeito (remover o asset .css emitido) é o mesmo.
+            Reflect.deleteProperty(bundle, fileName);
+          }
+        }
+        if (css === '') {
+          return html;
+        }
+        let injected = false;
+        return html.replace(/<link rel="stylesheet"[^>]*>/g, () => {
+          if (injected) {
+            return ''; // só o primeiro link vira <style>; os demais saem
+          }
+          injected = true;
+          return `<style>${css}</style>`;
+        });
+      },
+    },
+  };
+}
 
 /**
  * Contrato mínimo do manifest de um pacote: só lemos a versão.
@@ -41,6 +90,8 @@ export default defineConfig({
     // exibida no hero da landing page.
     __TS_VERSION__: JSON.stringify(tsManifest.version),
   },
+
+  plugins: [inlineStylesIntoHtml()],
 
   test: {
     // Testes de runtime puros: Node é suficiente (nenhum teste toca em DOM real).

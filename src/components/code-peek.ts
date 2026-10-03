@@ -209,13 +209,28 @@ export class CodePeek extends HTMLElement {
       return; // já construído (idempotente para upgrade/HMR)
     }
     this.#path = this.getAttribute('src') ?? '';
-    this.#build();
-    this.#renderLabels();
 
-    // Re-renderiza os textos internos quando o idioma muda (barramento tipado do i18n).
-    onLanguageChange(() => {
-      this.#renderLabels();
-    });
+    /**
+     * Construção ADIADA até a seção chegar perto da viewport: os 12 painéis
+     * construídos sincronamente no load viravam long tasks (medido: TBT ~330 ms
+     * no Lighthouse). O IO dispara ANTES de o visitante conseguir rolar até aqui
+     * (margem de 300 px), então o botão sempre existe quando ele chegar.
+     */
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          observer.disconnect();
+          this.#build();
+          this.#renderLabels();
+          // Re-renderiza os textos internos quando o idioma muda (barramento do i18n).
+          onLanguageChange(() => {
+            this.#renderLabels();
+          });
+        }
+      },
+      { rootMargin: '300px 0px' },
+    );
+    observer.observe(this);
   }
 
   attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null): void {
