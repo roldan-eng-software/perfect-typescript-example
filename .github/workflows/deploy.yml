@@ -23,6 +23,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # Guardia contra a corrida de deploys: se Pages estiver como "Deploy from a
+      # branch" (build_type legacy), o GitHub publica o index.html-FONTE crua — sem
+      # CSS/JS buildado. Isso aconteceu de verdade em 03/10/2026 (página sem estilo);
+      # agora o pipeline FALHA ALTO em vez de "dar success" num site quebrado.
+      - name: Ensure Pages source is GitHub Actions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          build_type="$(gh api "repos/${{ github.repository }}/pages" --jq .build_type 2>/dev/null || echo missing)"
+          if [ "$build_type" != "workflow" ]; then
+            echo "::error::GitHub Pages source is '$build_type' (expected 'workflow') — the site would serve the RAW source without built CSS/JS. Fix: Settings → Pages → Source → GitHub Actions."
+            exit 1
+          fi
+
       - name: Checkout
         uses: actions/checkout@v5
 

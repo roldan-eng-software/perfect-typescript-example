@@ -339,3 +339,12 @@ Itens pendentes deste repositório (mantidos atualizados nesta lista):
 
 > Fora do código: habilitar/atualizar a descrição do repositório no GitHub, se desejado.
 > O deploy em si já funciona — workflow `Deploy to GitHub Pages` roda a cada push em `main`.
+
+### Configuração obrigatória: Pages → Source = GitHub Actions
+
+O repositório precisa de **Settings → Pages → Source → GitHub Actions**
+(`build_type: workflow`). Com "Deploy from a branch", o GitHub publica o `index.html`
+**fonte** — links para `/src/styles/*.css` que não existem no Pages, resultando em
+página **sem CSS**. Isso aconteceu de verdade em 03/10/2026 (duas pipelines corriam em
+paralelo e a de branch venceu a corrida). O workflow agora verifica o `build_type` no
+primeiro step e **falha alto** se a fonte estiver errada.
