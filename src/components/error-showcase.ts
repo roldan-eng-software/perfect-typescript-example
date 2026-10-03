@@ -35,15 +35,18 @@ function parseErrorCards(source: string): ErrorCard[] {
   const cards: ErrorCard[] = [];
 
   lines.forEach((line, index) => {
-    const directiveIndex = line.indexOf('@ts-expect-error');
-    if (directiveIndex === -1) {
+    const trimmed = line.trim();
+    // Só comentários de LINHA iniciados com a diretiva: menções em prosa (ex.: o
+    // próprio cabeçalho @purpose do arquivo) não são cartões — auditoria da página
+    // real pegou esse caso (11 cartões para 10 diretivas).
+    if (!trimmed.startsWith('//') || !trimmed.includes('@ts-expect-error')) {
       return;
     }
-    const directive = line.trim();
-    const description = line.slice(directiveIndex + '@ts-expect-error'.length).trim();
+    const directiveIndex = trimmed.indexOf('@ts-expect-error');
+    const description = trimmed.slice(directiveIndex + '@ts-expect-error'.length).trim();
     const code = (lines[index + 1] ?? '').trim();
     cards.push({
-      directive,
+      directive: trimmed,
       code,
       message: description.length > 0 ? description : translate('errors.expected'),
     });

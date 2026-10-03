@@ -60,7 +60,6 @@ const demoEntries: readonly DemoEntry[] = [
     title: 'Mapped, conditional and template types',
     load: () => import('@/demos/06-mapped-conditional-template'),
   },
-  // TODO(passo 4): adicionar 07–12 conforme cada demo for sendo criada.
   {
     id: '07',
     title: 'Satisfies and as const',
