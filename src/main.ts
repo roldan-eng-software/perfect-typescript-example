@@ -15,6 +15,7 @@ import { h, qs, qsa } from '@/core/dom';
 import { loadDemo, registerDemo, type Cleanup, type DemoEntry } from '@/core/demo-registry';
 import { translate } from '@/core/i18n';
 import { match } from '@/core/result';
+import { schedulePerFrame } from '@/core/scheduler';
 
 // ---------------------------------------------------------------------------
 // Registro dos custom elements
@@ -130,12 +131,17 @@ function observeDemoSlots(): void {
         observer.unobserve(entry.target);
         const slot = entry.target;
         if (slot instanceof HTMLElement) {
-          void mountSlot(slot);
+          // Um mount por frame: com scroll instantâneo o IO entrega os 12 slots no
+          // MESMO task — montar tudo junto virava long task de ~1,7 s no Lighthouse
+          // (ver core/scheduler.ts e a auditoria no README).
+          schedulePerFrame(() => {
+            void mountSlot(slot);
+          });
         }
       }
     },
     // Carrega um pouco antes de a seção entrar na viewport (percepção de instantâneo).
-    { rootMargin: '300px 0px' },
+    { rootMargin: '80px 0px' },
   );
 
   for (const slot of qsa<HTMLElement>('.demo-slot[data-demo]')) {

@@ -10,6 +10,7 @@
 import { h, qs } from '@/core/dom';
 import { onLanguageChange, translate } from '@/core/i18n';
 import { err, match, ok, type Result } from '@/core/result';
+import { schedulePerFrame } from '@/core/scheduler';
 
 /**
  * Declaration merging: aumenta o mapa global de tags do DOM — depois disto,
@@ -220,15 +221,19 @@ export class CodePeek extends HTMLElement {
       (entries) => {
         if (entries.some((entry) => entry.isIntersecting)) {
           observer.disconnect();
-          this.#build();
-          this.#renderLabels();
-          // Re-renderiza os textos internos quando o idioma muda (barramento do i18n).
-          onLanguageChange(() => {
+          // Um build por frame: 12 painéis no mesmo task (scroll instantâneo do
+          // Lighthouse) geravam long tasks — ver core/scheduler.ts.
+          schedulePerFrame(() => {
+            this.#build();
             this.#renderLabels();
+            // Re-renderiza os textos internos quando o idioma muda (barramento do i18n).
+            onLanguageChange(() => {
+              this.#renderLabels();
+            });
           });
         }
       },
-      { rootMargin: '300px 0px' },
+      { rootMargin: '80px 0px' },
     );
     observer.observe(this);
   }

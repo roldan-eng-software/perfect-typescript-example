@@ -8,6 +8,7 @@
  */
 import { h } from '@/core/dom';
 import { onLanguageChange, translate } from '@/core/i18n';
+import { schedulePerFrame } from '@/core/scheduler';
 import { loadRawSource } from './code-peek';
 
 declare global {
@@ -78,11 +79,14 @@ export class ErrorShowcase extends HTMLElement {
       (entries) => {
         if (entries.some((entry) => entry.isIntersecting)) {
           shellObserver.disconnect();
-          this.#buildShell();
-          this.#observeForLoad();
+          // Um shell por frame (mesmo motivo do <code-peek> — ver core/scheduler.ts).
+          schedulePerFrame(() => {
+            this.#buildShell();
+            this.#observeForLoad();
+          });
         }
       },
-      { rootMargin: '300px 0px' },
+      { rootMargin: '80px 0px' },
     );
     shellObserver.observe(this);
   }

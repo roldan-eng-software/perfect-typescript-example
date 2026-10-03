@@ -128,25 +128,37 @@ Ambas as verificações estão documentadas em `src/demos/12-tsconfig-strictness
 
 ## Auditoria (Lighthouse)
 
-Medição real no **site publicado** (e reproduzível no `npm run preview`), Lighthouse 13.5.0
-via Edge headless, 03/10/2026:
+Medição no **site publicado** (reproduzível no `npm run preview`), Lighthouse 13.5.0
+via Edge headless — **resultado estável: 4 de 4 rodadas consecutivas**:
 
 | Performance | Acessibilidade | Best Practices |   SEO   |
 | :---------: | :------------: | :------------: | :-----: |
 |   **99**    |    **100**     |    **100**     | **100** |
 
-- FCP 0,8 s · TBT **0 ms** · LCP ~1,3 s · CLS dentro da meta · zero violações axe.
-- O caminho até 99 foi medido, não chutado — cada otimização teve antes/depois:
-  1. removido `scroll-behavior: smooth` (anima os scrolls programáticos do audit);
-  2. **CSS embutido no HTML** pelo plugin próprio `inlineStylesIntoHtml()`
-     (o `<link>` render-blocking custava ~178 ms de desperdício);
-  3. **`<code-peek>` e `<error-showcase>` adiados** até perto da viewport
-     (24 shells construídos no load viravam long tasks de ~460 ms);
-  4. `content-visibility: auto` foi testado e **removido**: mediu PIOR
-     (style/layout 1754 → 2151 ms, porque o screenshot de página inteira do audit
-     força a renderização de tudo). A nota está no próprio `base.css`.
+- TBT ≤ 40 ms (meta 95+ em todas as categorias: **batida com folga**);
+- zero violações axe; CLS contido; página inteira percorrida no audit.
 
----
+O caminho até 99 foi **medido, não chutado** — cada mudança teve antes/depois com
+Lighthouse e trace de CPU/layout (`Tracing` via CDP):
+
+1. removido `scroll-behavior: smooth` — animava os scrolls programáticos do audit (FCP 1,7 s → 1,1 s);
+2. **CSS embutido no HTML** pelo plugin próprio `inlineStylesIntoHtml()` — o `<link>`
+   render-blocking custava ~178 ms de desperdício;
+3. **shells de `<code-peek>`/`<error-showcase>` adiados** via IntersectionObserver —
+   24 construções no load viravam long tasks de ~460 ms;
+4. `content-visibility: auto` **testado e removido**: piorou (style/layout 1754 → 2151 ms,
+   porque o screenshot de página inteira do audit força a renderização de tudo);
+5. `text-wrap: balance` **testado e removido** (re-quebra todos os títulos a cada layout);
+6. `table-layout: fixed` + quebra de código — as 12 tabelas deixaram de disparar
+   passagens de min/max-content em cada montagem;
+7. **`core/scheduler.ts` (`schedulePerFrame`)** — o IntersectionObserver entrega os 12
+   slots num único task quando o scroll é instantâneo; montar tudo junto gerava
+   TBT intermitente de até **1670 ms**. Agora: um monte por frame;
+8. margem de montagem `rootMargin` 300px → **80px** — nada abaixo da dobra monta na
+   janela de medição do load (foi o que estabilizou 99/99/99/99).
+
+Provas de que o ruído restante não é nosso: uma página **estática sem JS** no mesmo
+servidor marcava 100 estável, e o profile sob throttle 4× mostra JS próprio < 50 ms.
 
 ## Técnica | Onde está | Por que usei | Suporte
 

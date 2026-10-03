@@ -273,6 +273,10 @@ lang-toggle {
 /* --- Tabelas documentais (ex.: tabela de flags do tsconfig) --- */
 .doc-table {
   width: 100%;
+  /* table-layout: fixed: as colunas vêm da PRIMEIRA linha — elimina as passagens
+     de min/max-content do algoritmo automático (medido: com auto + nowrap em 12
+     tabelas, cada montagem disparava re-layout global caro; ver auditoria no README). */
+  table-layout: fixed;
   border-collapse: collapse;
   font-size: 0.9rem;
   margin-top: var(--space-3);
@@ -291,5 +295,7 @@ lang-toggle {
 }
 
 .doc-table code {
-  white-space: nowrap;
+  /* Quebra quando o identificador longo não cabe (necessário com colunas fixed). */
+  white-space: normal;
+  overflow-wrap: anywhere;
 }

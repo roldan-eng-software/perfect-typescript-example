@@ -27,7 +27,9 @@ h1,
 h2,
 h3 {
   line-height: 1.25;
-  text-wrap: balance;
+  /* text-wrap: balance foi testado e REMOVIDO: refaz a quebra de linha de todos os
+     títulos a cada passo de layout — com as demos montando durante o scroll do
+     Lighthouse, o custo era medido em style/layout (nota de auditoria no README). */
 }
 
 p {

@@ -204,6 +204,9 @@ custaria dependência extra sem cobrir nada novo).
 
 ## Desvios em relação à estrutura original e convenções
 
+- **`src/core/scheduler.ts`**: drena um mount por frame (`schedulePerFrame`) — o
+  IntersectionObserver entrega vários alvos num único task quando o scroll é
+  instantâneo; montar em lote gerava long tasks intermitentes (auditoria do Lighthouse).
 - **`src/core/i18n.ts` + `src/components/lang-toggle.ts`**: adicionados para atender ao
   requisito de página em inglês com botão de tradução (a estrutura original não previa i18n).
 - **`src/types/domain.ts`**: tipos JSON compartilhados (`Json`, `JsonObject`).
