@@ -135,7 +135,8 @@ via Edge headless — **resultado estável: 4 de 4 rodadas consecutivas**:
 | :---------: | :------------: | :------------: | :-----: |
 |   **99**    |    **100**     |    **100**     | **100** |
 
-- TBT ≤ 40 ms (meta 95+ em todas as categorias: **batida com folga**);
+- **confirmado no deploy publicado: 99/100/100/100 em duas rodadas seguidas (TBT 0 ms)**;
+- TBT ≤ 40 ms no preview local (meta 95+ em todas as categorias: **batida com folga**);
 - zero violações axe; CLS contido; página inteira percorrida no audit.
 
 O caminho até 99 foi **medido, não chutado** — cada mudança teve antes/depois com
